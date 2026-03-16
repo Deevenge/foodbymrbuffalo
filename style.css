@@ -1392,7 +1392,7 @@ body[data-page="menu"] section.menu.section {
    GLOBAL TEXT CONTRAST FIX
 ========================================= */
 
-dd this instead:
+
 
 /* Light sections heading color */
 .section h1,
@@ -1567,6 +1567,43 @@ p {
 
   .hero-right {
     display: none;
+  }
+
+}
+/* MOBILE NAV FIX */
+
+@media (max-width: 900px){
+
+  .nav-toggle{
+    display:flex;
+  }
+
+  .btn-nav{
+    display:none;
+  }
+
+  .nav-links{
+    position:absolute;
+    top:100%;
+    left:0;
+    width:100%;
+    background:rgba(2,6,23,0.98);
+    backdrop-filter:blur(18px);
+
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.35s ease;
+  }
+
+  .nav-links ul{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:18px;
+    padding:20px;
+  }
+
+  .nav-links.is-open{
+    max-height:400px;
   }
 
 }
