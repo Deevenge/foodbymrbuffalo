@@ -100,7 +100,16 @@ if (isMenuPage) {
   const subtotalEl = document.getElementById("cart-subtotal");
   const orderForm = document.getElementById("order-form");
   const feedbackEl = document.getElementById("order-feedback");
-  const menuItems = document.querySelectorAll(".menu-item");
+
+  const categoryCards = document.querySelectorAll(".category-card");
+  const menuModal = document.getElementById("menu-modal");
+  const menuModalOverlay = document.getElementById("menu-modal-overlay");
+  const menuModalClose = document.getElementById("menu-modal-close");
+  const menuModalTitle = document.getElementById("menu-modal-title");
+  const menuModalItems = document.getElementById("menu-modal-items");
+  const continueBtn = document.getElementById("continue-ordering");
+  const finishBtn = document.getElementById("finish-order");
+  const mainFinishBtn = document.getElementById("main-finish-order");
 
   const cart = [];
 
@@ -178,12 +187,101 @@ if (isMenuPage) {
     subtotalEl.textContent = formatMoney(subtotal);
   }
 
-  menuItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      const name = item.dataset.name || item.textContent.trim();
-      const price = Number(item.dataset.price || "0");
-      addToCart(name, price);
+  function openMenuModal() {
+    if (!menuModal) return;
+    menuModal.classList.add("is-open");
+    menuModal.setAttribute("aria-hidden", "false");
+    document.documentElement.style.overflow = "hidden";
+  }
+
+  function closeMenuModal() {
+    if (!menuModal) return;
+    menuModal.classList.remove("is-open");
+    menuModal.setAttribute("aria-hidden", "true");
+    document.documentElement.style.overflow = "";
+    // reset checkout form visibility
+    if (orderForm) orderForm.classList.add("is-hidden");
+  }
+
+  function setActiveCategory(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (!section || !menuModalItems) return;
+
+    const title = section.querySelector("h2")?.textContent?.trim() || "Menu";
+    if (menuModalTitle) menuModalTitle.textContent = title;
+
+    menuModalItems.innerHTML = "";
+    const items = section.querySelectorAll(".menu-item");
+    items.forEach((li) => {
+      const name = li.dataset.name || li.textContent.trim();
+      const price = Number(li.dataset.price || "0");
+      const display = li.textContent.replace(/\s+/g, " ").trim();
+
+      const itemEl = document.createElement("li");
+      itemEl.className = "menu-modal-item";
+      itemEl.innerHTML = `
+        <div class="menu-modal-item-top">
+          <span class="menu-modal-item-name">${name}</span>
+          <span class="menu-modal-item-price">R${price}</span>
+        </div>
+        <div class="menu-modal-item-desc">${display}</div>
+      `;
+      itemEl.addEventListener("click", () => {
+        addToCart(name, price);
+      });
+      menuModalItems.appendChild(itemEl);
     });
+  }
+
+  categoryCards.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const sectionId = btn.dataset.category;
+      if (!sectionId) return;
+      setActiveCategory(sectionId);
+      openMenuModal();
+    });
+  });
+
+  if (menuModalOverlay) menuModalOverlay.addEventListener("click", closeMenuModal);
+  if (menuModalClose) menuModalClose.addEventListener("click", closeMenuModal);
+  if (continueBtn) continueBtn.addEventListener("click", closeMenuModal);
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      if (!cart.length) {
+        return;
+      }
+      if (orderForm) orderForm.classList.remove("is-hidden");
+      if (orderForm) orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  if (mainFinishBtn) {
+    mainFinishBtn.addEventListener("click", () => {
+      if (!cart.length) {
+        // Also open the modal on the first category to guide them
+        const firstCard = categoryCards[0];
+        if (firstCard) {
+          const sectionId = firstCard.dataset.category;
+          if (sectionId) setActiveCategory(sectionId);
+          openMenuModal();
+        }
+        return;
+      }
+
+      // If there is already food in the plate, open modal on any category and show checkout
+      const firstCard = categoryCards[0];
+      if (firstCard) {
+        const sectionId = firstCard.dataset.category;
+        if (sectionId) setActiveCategory(sectionId);
+      }
+      openMenuModal();
+      if (orderForm) orderForm.classList.remove("is-hidden");
+      if (orderForm) orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenuModal();
   });
 
   // Jump handling for homepage cards (menu.html?jump=...)
@@ -191,17 +289,15 @@ if (isMenuPage) {
   const jump = params.get("jump");
   if (jump) {
     const map = {
-      pico: "#section-pico",
-      wings: "#section-wings",
-      fries: "#section-fries",
-      pata: "#section-pata",
+      pico: "section-pico",
+      wings: "section-wings",
+      fries: "section-fries",
+      pata: "section-pata",
     };
-    const selector = map[jump];
-    if (selector) {
-      const target = document.querySelector(selector);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+    const sectionId = map[jump];
+    if (sectionId) {
+      setActiveCategory(sectionId);
+      openMenuModal();
     }
   }
 

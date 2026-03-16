@@ -44,17 +44,50 @@
     </div>
   </header>
 
-  <main class="section order-layout" style="padding-top: 120px;">
-    <div class="section-inner order-layout-main">
+  <main class="section" style="padding-top: 120px;">
+    <div class="section-inner">
       <header class="section-header" data-animate="fade-up">
         <p class="section-kicker">Full Menu</p>
-        <h2>Choose your fire. Then hit WhatsApp.</h2>
+        <h2>Pick a category. Build your plate.</h2>
         <p class="section-subtitle">
-          Browse the combos and plates below, then tap any WhatsApp button to drop your order
-          straight to Mr Buffalo with the items pre‑filled.
+          Tap a category card to open the menu. Add items to your plate, then finish the order to
+          send it and download your slip.
         </p>
       </header>
 
+      <section class="category-grid" data-animate="fade-up" data-delay="0.05">
+        <button class="category-card" data-category="section-meaty" type="button">
+          <span class="category-title">Meaty Meal</span>
+          <span class="category-sub">Platter combos</span>
+        </button>
+        <button class="category-card" data-category="section-pico" type="button">
+          <span class="category-title">Pico Burger</span>
+          <span class="category-sub">Burgers & meals</span>
+        </button>
+        <button class="category-card" data-category="section-pata" type="button">
+          <span class="category-title">Pata (Mini Pizza)</span>
+          <span class="category-sub">Patas & Meco</span>
+        </button>
+        <button class="category-card" data-category="section-wings" type="button">
+          <span class="category-title">Wings & B Combos</span>
+          <span class="category-sub">Hot or mild</span>
+        </button>
+        <button class="category-card" data-category="section-fries" type="button">
+          <span class="category-title">Fries Zone</span>
+          <span class="category-sub">Loaded fries & more</span>
+        </button>
+      </section>
+
+      <div class="menu-finish-cta" data-animate="fade-up" data-delay="0.08">
+        <button id="main-finish-order" type="button" class="btn primary">
+          Review & finish order
+        </button>
+        <p class="menu-finish-hint">
+          Add at least one item to your plate, then finish your order to send it and get your slip.
+        </p>
+      </div>
+
+      <!-- Keep the sections in DOM as data source -->
       <section id="section-meaty" class="menu section" style="padding-top: 32px; padding-bottom: 32px;">
         <div class="section-inner">
           <div class="section-header" data-animate="fade-up">
@@ -209,44 +242,6 @@
         </div>
       </section>
     </div>
-
-    <aside class="order-layout-side">
-      <div class="order-card">
-        <h2>Your Plate</h2>
-        <p class="order-card-subtitle">Tap any menu item to add it here.</p>
-
-        <ul id="cart-items" class="cart-items"></ul>
-
-        <div class="cart-summary">
-          <div class="cart-row">
-            <span>Subtotal</span>
-            <span id="cart-subtotal">R0</span>
-          </div>
-        </div>
-
-        <form id="order-form" class="order-form">
-          <h3>Checkout details</h3>
-          <label>
-            Full name
-            <input type="text" name="fullName" required />
-          </label>
-          <label>
-            Email (for slip)
-            <input type="email" name="email" required />
-          </label>
-          <label>
-            WhatsApp number
-            <input type="tel" name="whatsapp" required />
-          </label>
-          <label>
-            Notes (optional)
-            <textarea name="notes" rows="3" placeholder="Extra sauce, no onions, etc."></textarea>
-          </label>
-          <button type="submit" class="btn primary order-submit">Send order via Email</button>
-          <p class="order-feedback" id="order-feedback"></p>
-        </form>
-      </div>
-    </aside>
   </main>
 
   <footer class="footer">
@@ -296,6 +291,72 @@
   >
     WA
   </a>
+
+  <!-- Menu modal -->
+  <div class="menu-modal" id="menu-modal" aria-hidden="true">
+    <div class="menu-modal-overlay" id="menu-modal-overlay"></div>
+    <div class="menu-modal-panel" role="dialog" aria-modal="true">
+      <div class="menu-modal-topbar">
+        <div>
+          <p class="section-kicker">Category</p>
+          <h2 class="menu-modal-title" id="menu-modal-title">Menu</h2>
+        </div>
+        <button class="menu-modal-close" id="menu-modal-close" type="button" aria-label="Close menu">
+          ×
+        </button>
+      </div>
+
+      <div class="menu-modal-body">
+        <div class="menu-modal-left">
+          <p class="menu-modal-hint">Tap items to add them to your plate.</p>
+          <ul class="menu-modal-items" id="menu-modal-items"></ul>
+        </div>
+
+        <div class="menu-modal-right">
+          <div class="order-card">
+            <h2>Your Plate</h2>
+            <p class="order-card-subtitle">Update quantities, then finish your order.</p>
+
+            <ul id="cart-items" class="cart-items"></ul>
+
+            <div class="cart-summary">
+              <div class="cart-row">
+                <span>Total</span>
+                <span id="cart-subtotal">R0</span>
+              </div>
+            </div>
+
+            <div class="menu-modal-actions">
+              <button type="button" class="btn ghost" id="continue-ordering">Continue Ordering</button>
+              <button type="button" class="btn primary" id="finish-order">Finish Order</button>
+            </div>
+
+            <form id="order-form" class="order-form is-hidden">
+              <h3>Checkout details</h3>
+              <label>
+                Full name
+                <input type="text" name="fullName" required />
+              </label>
+              <label>
+                Email (for slip)
+                <input type="email" name="email" required />
+              </label>
+              <label>
+                WhatsApp number
+                <input type="tel" name="whatsapp" required />
+              </label>
+              <label>
+                Notes (optional)
+                <textarea name="notes" rows="3" placeholder="Extra sauce, no onions, etc."></textarea>
+              </label>
+              <button type="submit" class="btn primary order-submit">Send order via Email</button>
+              <p class="order-feedback" id="order-feedback"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
