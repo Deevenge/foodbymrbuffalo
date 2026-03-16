@@ -1283,7 +1283,7 @@ body[data-page="menu"] section.menu.section {
 
 @media (max-width: 768px) {
   .navbar-inner {
-    padding-inline: 16px;
+    padding-inline: 12px;
   }
 
   .nav-links {
@@ -1306,6 +1306,10 @@ body[data-page="menu"] section.menu.section {
     gap: 14px;
   }
 
+  .logo img {
+    height: 40px;
+  }
+
   .navbar.is-open .nav-links {
     opacity: 1;
     pointer-events: auto;
@@ -1322,6 +1326,18 @@ body[data-page="menu"] section.menu.section {
 
   .hero-shell {
     text-align: left;
+  }
+
+  .section-inner {
+    padding-inline: 4px;
+  }
+
+  .menu-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .gallery-card img {
+    height: 220px;
   }
 }
 
