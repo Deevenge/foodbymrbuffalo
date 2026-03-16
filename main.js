@@ -41,7 +41,7 @@ document.querySelectorAll("a[href^='#']").forEach((anchor) => {
   });
 });
 
-// HERO BANNER SLIDER (fixed the *0 bug)
+// HERO BANNER SLIDER
 const track = document.querySelector(".hero-banner-track");
 const dots = document.querySelectorAll(".hero-banner-dots .dot");
 const homeMenuCards = document.querySelectorAll(".home-menu-card");
@@ -54,8 +54,7 @@ function updateSlide(index) {
   currentSlide = index;
 
   const bannerHeight = track.firstElementChild?.getBoundingClientRect().height || 0;
-  // Fixed: properly account for gap between slides
-  track.style.transform = `translateY(-${(bannerHeight + 14) * index}px)`;
+  track.style.transform = `translateY(-${bannerHeight + 14 * index * 0}px)`; // 14px gap accounted visually
 
   dots.forEach((dot, i) => {
     dot.classList.toggle("is-active", i === currentSlide);
@@ -96,21 +95,8 @@ homeMenuCards.forEach((card) => {
 const isMenuPage = document.body.dataset.page === "menu";
 
 if (isMenuPage) {
-  // ────────────────────────────────────────────────
-  // Existing modal cart elements
   const cartItemsEl = document.getElementById("cart-items");
   const subtotalEl = document.getElementById("cart-subtotal");
-
-  // New floating cart + sheet elements
-  const floatingCartBtn = document.getElementById("floating-cart-btn");
-  const cartBadge = document.getElementById("cart-badge");
-  const cartSheet = document.getElementById("cart-sheet");
-  const sheetClose = document.getElementById("cart-sheet-close");
-  const sheetContinue = document.getElementById("sheet-continue");
-  const sheetFinish = document.getElementById("sheet-finish");
-  const sheetCartItems = document.getElementById("sheet-cart-items");
-  const sheetSubtotalEl = document.getElementById("sheet-cart-subtotal");
-
   const orderForm = document.getElementById("order-form");
   const feedbackEl = document.getElementById("order-feedback");
 
@@ -145,8 +131,6 @@ if (isMenuPage) {
       cart.push({ name, price: numericPrice, qty: 1 });
     }
     renderCart();
-    renderSheetCart();
-    updateCartBadge();
   }
 
   function updateQty(index, delta) {
@@ -157,23 +141,13 @@ if (isMenuPage) {
       cart.splice(index, 1);
     }
     renderCart();
-    renderSheetCart();
-    updateCartBadge();
   }
 
-  function updateCartBadge() {
-    if (!cartBadge) return;
-    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-    if (totalQty > 0) {
-      cartBadge.textContent = totalQty > 99 ? "99+" : totalQty;
-      cartBadge.classList.remove("is-hidden");
-    } else {
-      cartBadge.classList.add("is-hidden");
-    }
+  function removeItem(index) {
+    cart.splice(index, 1);
+    renderCart();
   }
 
-  // ────────────────────────────────────────────────
-  // Render cart in MODAL (desktop-friendly)
   function renderCart() {
     if (!cartItemsEl || !subtotalEl) return;
     cartItemsEl.innerHTML = "";
@@ -191,66 +165,25 @@ if (isMenuPage) {
           <span class="cart-item-meta">${formatMoney(item.price)} each</span>
         </div>
         <div class="cart-item-actions">
-          <button type="button" data-action="dec" data-index="${index}">-</button>
-          <button type="button" data-action="inc" data-index="${index}">+</button>
+          <button type="button" data-action="dec">-</button>
+          <button type="button" data-action="inc">+</button>
         </div>
       `;
+
+      li.querySelectorAll("button").forEach((btn) => {
+        const action = btn.dataset.action;
+        btn.addEventListener("click", () => {
+          if (action === "inc") updateQty(index, 1);
+          if (action === "dec") updateQty(index, -1);
+        });
+      });
+
       cartItemsEl.appendChild(li);
     });
 
     subtotalEl.textContent = formatMoney(subtotal);
   }
 
-  // ────────────────────────────────────────────────
-  // Render cart in BOTTOM SHEET (mobile-friendly)
-  function renderSheetCart() {
-    if (!sheetCartItems || !sheetSubtotalEl) return;
-    sheetCartItems.innerHTML = "";
-
-    let subtotal = 0;
-
-    cart.forEach((item, index) => {
-      subtotal += item.price * item.qty;
-
-      const li = document.createElement("li");
-      li.className = "cart-item";
-      li.innerHTML = `
-        <div class="cart-item-main">
-          <span class="cart-item-name">${item.qty} × ${item.name}</span>
-          <span class="cart-item-meta">${formatMoney(item.price)} each</span>
-        </div>
-        <div class="cart-item-actions">
-          <button type="button" data-action="dec" data-index="${index}">-</button>
-          <button type="button" data-action="inc" data-index="${index}">+</button>
-        </div>
-      `;
-      sheetCartItems.appendChild(li);
-    });
-
-    sheetSubtotalEl.textContent = formatMoney(subtotal);
-  }
-
-  // ────────────────────────────────────────────────
-  // Event delegation for +/- buttons (both modal and sheet)
-  function setupCartDelegation(container) {
-    if (!container) return;
-    container.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-action]");
-      if (!btn) return;
-      const action = btn.dataset.action;
-      const index = parseInt(btn.dataset.index, 10);
-      if (isNaN(index)) return;
-
-      if (action === "inc") updateQty(index, 1);
-      if (action === "dec") updateQty(index, -1);
-    });
-  }
-
-  setupCartDelegation(cartItemsEl);
-  setupCartDelegation(sheetCartItems);
-
-  // ────────────────────────────────────────────────
-  // Modal logic (unchanged mostly)
   function openMenuModal() {
     if (!menuModal) return;
     menuModal.classList.add("is-open");
@@ -263,6 +196,7 @@ if (isMenuPage) {
     menuModal.classList.remove("is-open");
     menuModal.setAttribute("aria-hidden", "true");
     document.documentElement.style.overflow = "";
+    // reset checkout form visibility
     if (orderForm) orderForm.classList.add("is-hidden");
   }
 
@@ -308,50 +242,11 @@ if (isMenuPage) {
   if (menuModalOverlay) menuModalOverlay.addEventListener("click", closeMenuModal);
   if (menuModalClose) menuModalClose.addEventListener("click", closeMenuModal);
   if (continueBtn) continueBtn.addEventListener("click", closeMenuModal);
-
-  // ────────────────────────────────────────────────
-  // Floating cart & sheet controls
-  if (floatingCartBtn) {
-    floatingCartBtn.addEventListener("click", () => {
-      if (cart.length === 0) {
-        // Optional: open first category to encourage adding items
-        const firstCard = categoryCards[0];
-        if (firstCard) {
-          const sectionId = firstCard.dataset.category;
-          if (sectionId) setActiveCategory(sectionId);
-          openMenuModal();
-        }
-        return;
-      }
-      if (cartSheet) cartSheet.classList.add("is-open");
-      renderSheetCart();
-    });
-  }
-
-  if (sheetClose) {
-    sheetClose.addEventListener("click", () => {
-      if (cartSheet) cartSheet.classList.remove("is-open");
-    });
-  }
-
-  if (sheetContinue) {
-    sheetContinue.addEventListener("click", () => {
-      if (cartSheet) cartSheet.classList.remove("is-open");
-    });
-  }
-
-  if (sheetFinish) {
-    sheetFinish.addEventListener("click", () => {
-      if (cartSheet) cartSheet.classList.remove("is-open");
-      if (finishBtn) finishBtn.click(); // trigger the existing finish flow
-    });
-  }
-
-  // ────────────────────────────────────────────────
-  // Finish order buttons (modal & main)
   if (finishBtn) {
     finishBtn.addEventListener("click", () => {
-      if (!cart.length) return;
+      if (!cart.length) {
+        return;
+      }
       if (orderForm) orderForm.classList.remove("is-hidden");
       if (orderForm) orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -360,6 +255,7 @@ if (isMenuPage) {
   if (mainFinishBtn) {
     mainFinishBtn.addEventListener("click", () => {
       if (!cart.length) {
+        // Also open the modal on the first category to guide them
         const firstCard = categoryCards[0];
         if (firstCard) {
           const sectionId = firstCard.dataset.category;
@@ -369,6 +265,7 @@ if (isMenuPage) {
         return;
       }
 
+      // If there is already food in the plate, open modal on any category and show checkout
       const firstCard = categoryCards[0];
       if (firstCard) {
         const sectionId = firstCard.dataset.category;
@@ -381,13 +278,10 @@ if (isMenuPage) {
   }
 
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeMenuModal();
-      if (cartSheet) cartSheet.classList.remove("is-open");
-    }
+    if (e.key === "Escape") closeMenuModal();
   });
 
-  // Jump from homepage
+  // Jump handling for homepage cards (menu.html?jump=...)
   const params = new URLSearchParams(window.location.search);
   const jump = params.get("jump");
   if (jump) {
@@ -404,8 +298,6 @@ if (isMenuPage) {
     }
   }
 
-  // ────────────────────────────────────────────────
-  // Order form submit (already async – good)
   if (orderForm) {
     orderForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -440,11 +332,14 @@ if (isMenuPage) {
 
       const orderSummary = lines.join("\n");
 
+      // Match your EmailJS template fields:
+      // {{name}}, {{email}}, {{whatsapp}}, {{order_details}}
       const templateParams = {
         name: fullName,
         email,
         whatsapp,
         order_details: `${orderSummary}\n\nTotal: ${formatMoney(subtotal)}\nNotes: ${notes || "None"}`,
+        // Helpful standard fields
         reply_to: email,
       };
 
@@ -461,13 +356,16 @@ if (isMenuPage) {
           feedbackEl.style.color = "#4ade80";
         }
 
+        // Generate PDF slip using jsPDF (only on menu page)
         if (window.jspdf && window.jspdf.jsPDF) {
           const { jsPDF } = window.jspdf;
           const doc = new jsPDF();
 
+          // Background
           doc.setFillColor(3, 7, 18);
           doc.rect(0, 0, 210, 297, "F");
 
+          // Header
           doc.setTextColor(255, 255, 255);
           doc.setFontSize(20);
           doc.text("FOOD BY MR BUFFALO", 14, 20);
@@ -476,19 +374,23 @@ if (isMenuPage) {
           doc.setTextColor(209, 213, 219);
           doc.text("Order Slip / Invoice", 14, 28);
 
+          // Customer info
           doc.setFontSize(10);
           doc.text(`Name: ${fullName}`, 14, 40);
           doc.text(`Email: ${email}`, 14, 46);
           doc.text(`WhatsApp: ${whatsapp}`, 14, 52);
 
+          // Totals
           doc.text(`Total: ${formatMoney(subtotal)}`, 14, 62);
 
+          // Order details
           doc.setFontSize(11);
           doc.text("Items:", 14, 76);
           doc.setFontSize(9);
           const linesWrapped = doc.splitTextToSize(orderSummary, 182);
           doc.text(linesWrapped, 14, 84);
 
+          // Notes
           if (notes) {
             doc.setFontSize(10);
             doc.text("Notes:", 14, 84 + linesWrapped.length * 5 + 6);
@@ -500,29 +402,19 @@ if (isMenuPage) {
           const filename = `FoodByMrBuffalo-${Date.now()}.pdf`;
           doc.save(filename);
         }
-
-        // Optional: clear cart after success
-        // cart.length = 0;
-        // renderCart();
-        // renderSheetCart();
-        // updateCartBadge();
       } catch (err) {
         if (feedbackEl) {
-          feedbackEl.textContent = "Could not send order. Please try again.";
+          feedbackEl.textContent = "Could not send order. Please try again in a moment.";
           feedbackEl.style.color = "#f97316";
         }
-        console.error("EmailJS / PDF error", err);
+        // eslint-disable-next-line no-console
+        console.error("EmailJS error", err);
       }
     });
   }
-
-  // Initial render & badge
-  renderCart();
-  renderSheetCart();
-  updateCartBadge();
 }
 
-// SCROLL ANIMATIONS
+// SCROLL ANIMATIONS (sections + cards)
 const animatedNodes = document.querySelectorAll("[data-animate]");
 
 if ("IntersectionObserver" in window) {
@@ -568,6 +460,7 @@ if ("IntersectionObserver" in window) {
             el.style.transform = "translateX(0)";
           }, delay * 1000);
         } else if (type === "marquee") {
+          // handled via CSS keyframes, but we can ensure visibility
           el.style.opacity = "1";
         }
 
