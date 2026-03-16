@@ -430,6 +430,7 @@ section {
     radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
   border: 1px solid rgba(15, 23, 42, 1);
   box-shadow: 0 26px 60px rgba(15, 23, 42, 1);
+  color: #f9fafb;
 }
 
 .order-card h2 {
@@ -463,7 +464,7 @@ section {
 
 .order-card-subtitle {
   font-size: 0.8rem;
-  color: #9ca3af;
+  color: #e5e7eb;
   margin-bottom: 10px;
 }
 
@@ -500,6 +501,7 @@ section {
 
 .cart-item-name {
   font-weight: 500;
+  color: #f9fafb;
 }
 
 .cart-item-meta {
@@ -600,7 +602,7 @@ section {
 .menu-finish-hint {
   margin-top: 6px;
   font-size: 0.82rem;
-  color: #9ca3af;
+  color: #4b5563;
 }
 
 /* MODAL */
@@ -680,7 +682,7 @@ section {
 
 .menu-modal-hint {
   font-size: 0.84rem;
-  color: #9ca3af;
+  color: #e5e7eb;
   margin-bottom: 10px;
 }
 
@@ -793,7 +795,7 @@ body[data-page="menu"] section.menu.section {
   font-size: 0.78rem;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #9ca3af;
+  color: #111827;
   margin-bottom: 6px;
 }
 
@@ -804,12 +806,12 @@ body[data-page="menu"] section.menu.section {
 
 .section-subtitle {
   max-width: 420px;
-  color: #9ca3af;
+  color: #4b5563;
   font-size: 0.95rem;
 }
 
 .section-content p {
-  color: #d1d5db;
+  color: #111827;
   font-size: 0.96rem;
 }
 
@@ -824,6 +826,14 @@ body[data-page="menu"] section.menu.section {
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.2fr);
   gap: 52px;
   align-items: center;
+}
+
+.about {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.about .section-content p {
+  color: #111827;
 }
 
 .about-pills {
@@ -1377,4 +1387,186 @@ body[data-page="menu"] section.menu.section {
     width: 100%;
     justify-content: space-between;
   }
+}
+/* =========================================
+   GLOBAL TEXT CONTRAST FIX
+========================================= */
+
+dd this instead:
+
+/* Light sections heading color */
+.section h1,
+.section h2,
+.section h3 {
+  color: #0f172a;
+}
+
+p {
+  color: #374151;
+}
+
+/* =========================================
+   DARK SECTION TEXT FIX (hero + dark cards)
+========================================= */
+
+.hero,
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p,
+.hero span {
+  color: #ffffff;
+}
+
+.hero-subtitle {
+  color: #e5e7eb;
+}
+
+/* hero banners text fix */
+.hero-banner h3 {
+  color: #ffffff;
+}
+
+.hero-banner p {
+  color: #d1d5db;
+}
+
+/* =========================================
+   SECTION HEADERS
+========================================= */
+
+.section-kicker {
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #ef4444;
+  margin-bottom: 6px;
+}
+
+.section-header h2 {
+  font-size: 2rem;
+  color: #111827;
+}
+
+.section-subtitle {
+  color: #4b5563;
+  margin-top: 6px;
+}
+
+/* =========================================
+   ABOUT SECTION
+========================================= */
+
+.about {
+  background: #ffffff;
+}
+
+.about h2 {
+  color: #111827;
+}
+
+.about p {
+  color: #374151;
+}
+
+/* =========================================
+   MENU SECTION
+========================================= */
+
+.menu {
+  background: linear-gradient(to bottom,#ffffff,#f8fafc);
+}
+
+.food-card h3 {
+  color: #111827;
+}
+
+.food-card p {
+  color: #4b5563;
+}
+
+/* =========================================
+   GALLERY
+========================================= */
+
+.gallery {
+  background: #f9fafb;
+}
+
+/* =========================================
+   FOOTER
+========================================= */
+
+.footer {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.footer h3,
+.footer h4 {
+  color: #ffffff;
+}
+
+.footer p,
+.footer a {
+  color: #cbd5f5;
+}
+
+.footer a:hover {
+  color: #ffffff;
+}
+/* Fix readability on dark food cards */
+.food-card,
+.menu-card,
+.hero-banner {
+  color: #e5e7eb;
+}
+
+.food-card h3,
+.menu-card h3,
+.hero-banner h3 {
+  color: #ffffff;
+}
+
+.food-card p,
+.menu-card p,
+.hero-banner p {
+  color: #cbd5e1;
+}
+@media (max-width: 768px) {
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    width: 100%;
+    background: rgba(2,6,23,0.98);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: none;
+    padding: 20px 0;
+  }
+
+  .nav-links ul {
+    flex-direction: column;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .nav-links.active {
+    display: block;
+  }
+
+}
+@media (max-width: 768px) {
+
+  .hero-right {
+    display: none;
+  }
+
 }
