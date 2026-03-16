@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food By Mr Buffalo</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a href="#home" class="logo">
+        <img
+          src="images/mr_buffalo_logo_wide-ezgif.com-gif-maker.png"
+          alt="Food By Mr Buffalo logo"
+        />
+      </a>
+
+      <nav class="nav-links">
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="menu.html">Menu</a></li>
+          <li><a href="#people">Our People</a></li>
+        </ul>
+      </nav>
+
+      <a
+        href="https://wa.me/27659588947?text=Hi%20Mr%20Buffalo%2C%20I%27d%20like%20to%20order%20from%20the%20menu."
+        target="_blank"
+        rel="noopener"
+        class="btn btn-nav primary"
+        >WhatsApp Order</a
+      >
+
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+      <source src="images/b2_1.mp4" type="video/mp4" />
+    </video>
+
+    <div class="hero-gradient"></div>
+
+    <div class="hero-shell">
+      <div class="hero-left">
+        <div class="eyebrow" data-animate="fade-up">Kasi gourmet, done properly.</div>
+        <h1 data-animate="fade-up" data-delay="0.05">
+          Food By<br />
+          <span>Mr Buffalo</span>
+        </h1>
+        <p class="hero-subtitle" data-animate="fade-up" data-delay="0.1">
+          Bold flavours. Big portions. <span>Zero compromise.</span>
+        </p>
+
+        <div class="hero-buttons" data-animate="fade-up" data-delay="0.16">
+          <a href="menu.html" class="btn primary">View Full Menu</a>
+          <a
+            href="https://wa.me/27659588947?text=Hi%20Mr%20Buffalo%2C%20I%27d%20like%20to%20order."
+            target="_blank"
+            rel="noopener"
+            class="btn ghost"
+            >Order on WhatsApp</a
+          >
+        </div>
+
+        <div class="hero-meta" data-animate="fade-up" data-delay="0.22">
+          <div class="meta-pill">🔥 Flame‑grilled favourites</div>
+          <div class="meta-pill">📍 Kasi-born brand</div>
+        </div>
+      </div>
+
+      <div class="hero-right" data-animate="slide-in">
+        <div class="hero-banner-track">
+          <article class="hero-banner hero-banner--highlight">
+            <h3>Buffalo Signature Combo</h3>
+            <p>
+              Burger + wings + loaded fries. Built for serious appetites and shared moments.
+            </p>
+            <span class="badge">Most Loved</span>
+          </article>
+
+          <article class="hero-banner">
+            <h3>Street Classics, Elevated</h3>
+            <p>
+              From slap chips to premium steak cuts, we keep it kasi but make it premium.
+            </p>
+            <span class="badge badge-outline">Kasi Deluxe</span>
+          </article>
+
+          <article class="hero-banner">
+            <h3>Events & Catering</h3>
+            <p>
+              Let Mr Buffalo feed your next groove, corporate, or private event with style.
+            </p>
+            <span class="badge">Book Ahead</span>
+          </article>
+        </div>
+
+        <div class="hero-banner-dots">
+          <button class="dot is-active" data-slide="0" aria-label="Signature combo slide"></button>
+          <button class="dot" data-slide="1" aria-label="Street classics slide"></button>
+          <button class="dot" data-slide="2" aria-label="Events slide"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="about section">
+    <div class="section-inner">
+      <div class="about-text section-content" data-animate="fade-up">
+        <p class="section-kicker">About</p>
+        <h2>Born in the heart of the kasi.</h2>
+        <p>
+          Food By Mr Buffalo serves up flame‑kissed meats, street‑style favourites, and premium
+          plates that feel like home. Every dish is built on real flavour, proper portions, and
+          respect for the culture.
+        </p>
+        <p>
+          From a small township hustle to a fully fledged brand, we keep it authentic while levelling
+          up the experience — from the plating to the playlist.
+        </p>
+
+        <div class="about-pills">
+          <span class="pill">Handcrafted sauces</span>
+          <span class="pill">Daily fresh prep</span>
+          <span class="pill">Events & catering</span>
+        </div>
+      </div>
+
+      <div class="about-media" data-animate="float-card">
+        <div class="about-main-card">
+          <img src="images/steak.jpg" alt="Grilled steak from Food By Mr Buffalo" />
+          <div class="about-main-tag">
+            <span>Prime Grill</span>
+            <strong>Medium‑rare perfection</strong>
+          </div>
+        </div>
+
+        <div class="about-side-card">
+          <img src="images/combo1.jpg" alt="Buffalo burger combo" />
+          <div class="about-side-text">
+            <span>Buffalo Burger</span>
+            <p>Stacked, saucy & flame grilled.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section id="menu" class="menu section">
+    <div class="section-inner">
+      <header class="section-header" data-animate="fade-up">
+        <p class="section-kicker">Menu</p>
+        <h2>Signature plates & street favourites.</h2>
+        <p class="section-subtitle">
+          Hand‑picked dishes that show off what Mr Buffalo does best.
+        </p>
+      </header>
+
+      <div class="menu-tags" data-animate="fade-up" data-delay="0.08">
+        <button class="chip is-active">All</button>
+        <button class="chip">Combos</button>
+        <button class="chip">Grill</button>
+        <button class="chip">Wings</button>
+        <button class="chip">Fries</button>
+      </div>
+
+      <div class="menu-grid">
+        <article class="food-card home-menu-card" data-animate="card-rise" data-jump="pico">
+          <div class="food-media">
+            <img src="images/combo1.jpg" alt="Buffalo Burger combo" />
+            <span class="food-tag">Combo</span>
+          </div>
+          <div class="food-body">
+            <h3>Buffalo Burger Combo</h3>
+            <p>Juicy grilled burger, secret sauce, crispy slap chips, and a side of wings.</p>
+            <div class="food-meta">
+              <span class="pill pill-soft">Best seller</span>
+              <span class="pill pill-soft">For 1–2 people</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="food-card home-menu-card" data-animate="card-rise" data-delay="0.05" data-jump="wings">
+          <div class="food-media">
+            <img src="images/combo2.jpg" alt="Buffalo Wings" />
+            <span class="food-tag">Wings</span>
+          </div>
+          <div class="food-body">
+            <h3>Buffalo Wings</h3>
+            <p>Hot, crispy, and glazed in our signature Buffalo sauce with a smoky kick.</p>
+            <div class="food-meta">
+              <span class="pill pill-soft">Hot or mild</span>
+              <span class="pill pill-soft">Perfect for sharing</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="food-card home-menu-card" data-animate="card-rise" data-delay="0.1" data-jump="fries">
+          <div class="food-media">
+            <img src="images/chips.jpg" alt="Loaded fries" />
+            <span class="food-tag">Fries</span>
+          </div>
+          <div class="food-body">
+            <h3>Loaded Fries</h3>
+            <p>Golden fries stacked with cheese, sauce, and your choice of topping.</p>
+            <div class="food-meta">
+              <span class="pill pill-soft">Add wings / steak</span>
+              <span class="pill pill-soft">Serious comfort</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="food-card home-menu-card" data-animate="card-rise" data-delay="0.15" data-jump="pata">
+          <div class="food-media">
+            <img src="images/steak.jpg" alt="Grilled steak" />
+            <span class="food-tag">Grill</span>
+          </div>
+          <div class="food-body">
+            <h3>Grilled Steak Plate</h3>
+            <p>Prime steak, flame‑grilled and served with sides that hit just right.</p>
+            <div class="food-meta">
+              <span class="pill pill-soft">Flame grilled</span>
+              <span class="pill pill-soft">Chef’s favourite</span>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEOPLE / GALLERY -->
+  <section id="people" class="gallery section">
+    <div class="section-inner">
+      <header class="section-header" data-animate="fade-up">
+        <p class="section-kicker">Our People</p>
+        <h2>The crew behind the flame.</h2>
+        <p class="section-subtitle">
+          From the grill master to the sauce wizard, these are the faces behind the plates.
+        </p>
+      </header>
+
+      <div class="gallery-marquee" data-animate="marquee">
+        <div class="gallery-track">
+          <figure class="gallery-card">
+            <img src="images/p1.jpg" alt="Food By Mr Buffalo team member" />
+          </figure>
+          <figure class="gallery-card">
+            <img src="images/p2.jpg" alt="Food By Mr Buffalo team member" />
+          </figure>
+          <figure class="gallery-card">
+            <img src="images/sandile.jpg" alt="Founder Sandile" />
+            <figcaption>Sandile — Mr Buffalo</figcaption>
+          </figure>
+          <figure class="gallery-card">
+            <img src="images/p3.jpg" alt="Food By Mr Buffalo team member" />
+          </figure>
+
+          <!-- duplicate for infinite loop -->
+          <figure class="gallery-card">
+            <img src="images/p1.jpg" alt="Food By Mr Buffalo team member" />
+          </figure>
+          <figure class="gallery-card">
+            <img src="images/p2.jpg" alt="Food By Mr Buffalo team member" />
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>Food By Mr Buffalo</h3>
+        <p>Delicacies served with diligence, straight from the kasi.</p>
+      </div>
+
+      <div class="footer-columns">
+        <div class="footer-col">
+          <h4>Visit</h4>
+          <p>
+            Your location here<br />
+            Johannesburg, South Africa
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <p>
+            Phone / WhatsApp:
+            <span
+              ><a
+                href="https://wa.me/27659588947?text=Hi%20Mr%20Buffalo%2C%20I%27d%20like%20to%20place%20an%20order."
+                target="_blank"
+                rel="noopener"
+                >+27 65 958 8947</a
+              ></span
+            >
+          </p>
+          <p>Instagram: <span>@foodbymrbuffalo</span></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© <span id="year"></span> Food By Mr Buffalo. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <a
+    href="https://wa.me/27659588947?text=Hi%20Mr%20Buffalo%2C%20I%27m%20on%20your%20website%20and%20ready%20to%20order."
+    target="_blank"
+    rel="noopener"
+    class="whatsapp-fab"
+    aria-label="Order on WhatsApp"
+  >
+    WA
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    // TODO: replace with your actual EmailJS public key
+    if (window.emailjs) {
+      emailjs.init("7t3SmVwZrfxAZCFfx");
+    }
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
