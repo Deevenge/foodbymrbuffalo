@@ -11,8 +11,9 @@ body {
 
 body {
   font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  background: radial-gradient(circle at top left, #0c1b37 0%, #020817 45%, #020412 100%);
-  color: #f9fafb;
+  background:
+    radial-gradient(circle at top left, #f4f4f4 0%, #e2e2e2 30%, #f9f9f9 70%, #ffffff 100%);
+  color: #111827;
   overflow-x: hidden;
 }
 
@@ -169,8 +170,8 @@ section {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(to bottom, rgba(3, 7, 18, 0.2), rgba(3, 7, 18, 0.9)),
-    radial-gradient(circle at 0% 0%, rgba(248, 250, 252, 0.04), transparent 60%);
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(15, 23, 42, 0.7)),
+    radial-gradient(circle at 0% 0%, rgba(255, 255, 255, 0.15), transparent 60%);
   mix-blend-mode: multiply;
   z-index: -2;
 }
@@ -1159,7 +1160,7 @@ body[data-page="menu"] section.menu.section {
   letter-spacing: 0.08em;
   text-decoration: none;
   box-shadow: 0 18px 45px rgba(15, 23, 42, 0.95);
-  z-index: 1200;
+  z-index: 3500;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
@@ -1326,6 +1327,16 @@ body[data-page="menu"] section.menu.section {
 
   .hero-shell {
     text-align: left;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-buttons .btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .section-inner {
