@@ -1300,6 +1300,7 @@ body[data-page="menu"] section.menu.section {
     border-radius: 22px;
     background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
     padding: 16px 18px;
+    z-index: 4000;
     transform-origin: top;
     transform: scaleY(0.9) translateY(-8px);
     opacity: 0;
