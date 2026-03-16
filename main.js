@@ -1,15 +1,6 @@
 // NAVBAR SCROLL + MOBILE TOGGLE
 const navbar = document.querySelector(".navbar");
 const navToggle = document.querySelector(".nav-toggle");
-const toggle = document.querySelector(".nav-toggle");
-const nav = document.querySelector(".nav-links");
-
-toggle.addEventListener("click", () => {
-
-  toggle.classList.toggle("is-open");
-  nav.classList.toggle("is-open");
-
-});
 window.addEventListener("scroll", () => {
   if (!navbar) return;
   if (window.scrollY > 40) {
@@ -176,7 +167,6 @@ if (isMenuPage) {
         <div class="cart-item-actions">
           <button type="button" data-action="dec">-</button>
           <button type="button" data-action="inc">+</button>
-          <button type="button" data-action="remove">x</button>
         </div>
       `;
 
@@ -185,7 +175,6 @@ if (isMenuPage) {
         btn.addEventListener("click", () => {
           if (action === "inc") updateQty(index, 1);
           if (action === "dec") updateQty(index, -1);
-          if (action === "remove") removeItem(index);
         });
       });
 
