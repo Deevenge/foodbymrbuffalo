@@ -91,10 +91,7 @@ homeMenuCards.forEach((card) => {
   });
 });
 
-// NAVBAR SCROLL + MOBILE TOGGLE + SMOOTH SCROLL + HERO SLIDER (fixed) + HOME CARDS JUMP
-// ... keep all your original code up to here ...
-
-// CART + EMAILJS (updated)
+// CART + EMAILJS ORDERING (menu page)
 const isMenuPage = document.body.dataset.page === "menu";
 
 if (isMenuPage) {
@@ -102,15 +99,6 @@ if (isMenuPage) {
   const subtotalEl = document.getElementById("cart-subtotal");
   const orderForm = document.getElementById("order-form");
   const feedbackEl = document.getElementById("order-feedback");
-
-  const floatingCartBtn = document.getElementById("floating-cart-btn");
-  const cartBadge = document.getElementById("cart-badge");
-  const cartSheet = document.getElementById("cart-sheet");
-  const sheetClose = document.getElementById("cart-sheet-close");
-  const sheetContinue = document.getElementById("sheet-continue");
-  const sheetFinish = document.getElementById("sheet-finish");
-  const sheetCartItems = document.getElementById("sheet-cart-items");
-  const sheetSubtotalEl = document.getElementById("sheet-cart-subtotal");
 
   const categoryCards = document.querySelectorAll(".category-card");
   const menuModal = document.getElementById("menu-modal");
@@ -124,56 +112,51 @@ if (isMenuPage) {
 
   const cart = [];
 
-  function formatMoney(amount) { return `R${amount.toFixed(0)}`; }
-
-  function findCartItem(name, price) {
-    return cart.find(item => item.name === name && item.price === price);
+  function formatMoney(amount) {
+    return `R${amount.toFixed(0)}`;
   }
 
-  function showAddedFeedback(name) {
-    const toast = document.createElement("div");
-    toast.className = "added-toast";
-    toast.textContent = `${name} added to plate!`;
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.style.opacity = "1"; toast.style.transform = "translateX(-50%) translateY(-10px)"; }, 10);
-    setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 400); }, 1800);
+  function findCartItem(name, price) {
+    return cart.find((item) => item.name === name && item.price === price);
   }
 
   function addToCart(name, price) {
     const numericPrice = Number(price) || 0;
     if (!numericPrice) return;
+
     const existing = findCartItem(name, numericPrice);
-    if (existing) existing.qty += 1;
-    else cart.push({ name, price: numericPrice, qty: 1 });
+    if (existing) {
+      existing.qty += 1;
+    } else {
+      cart.push({ name, price: numericPrice, qty: 1 });
+    }
     renderCart();
-    renderSheetCart();
-    updateCartBadge();
-    showAddedFeedback(name);
   }
 
   function updateQty(index, delta) {
     const item = cart[index];
     if (!item) return;
     item.qty += delta;
-    if (item.qty <= 0) cart.splice(index, 1);
+    if (item.qty <= 0) {
+      cart.splice(index, 1);
+    }
     renderCart();
-    renderSheetCart();
-    updateCartBadge();
   }
 
-  function updateCartBadge() {
-    if (!cartBadge) return;
-    const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-    cartBadge.textContent = totalQty > 99 ? "99+" : totalQty;
-    cartBadge.classList.toggle("is-hidden", totalQty === 0);
+  function removeItem(index) {
+    cart.splice(index, 1);
+    renderCart();
   }
 
   function renderCart() {
     if (!cartItemsEl || !subtotalEl) return;
     cartItemsEl.innerHTML = "";
+
     let subtotal = 0;
+
     cart.forEach((item, index) => {
       subtotal += item.price * item.qty;
+
       const li = document.createElement("li");
       li.className = "cart-item";
       li.innerHTML = `
@@ -182,53 +165,24 @@ if (isMenuPage) {
           <span class="cart-item-meta">${formatMoney(item.price)} each</span>
         </div>
         <div class="cart-item-actions">
-          <button type="button" data-action="dec" data-index="${index}">-</button>
-          <button type="button" data-action="inc" data-index="${index}">+</button>
+          <button type="button" data-action="dec">-</button>
+          <button type="button" data-action="inc">+</button>
         </div>
       `;
+
+      li.querySelectorAll("button").forEach((btn) => {
+        const action = btn.dataset.action;
+        btn.addEventListener("click", () => {
+          if (action === "inc") updateQty(index, 1);
+          if (action === "dec") updateQty(index, -1);
+        });
+      });
+
       cartItemsEl.appendChild(li);
     });
+
     subtotalEl.textContent = formatMoney(subtotal);
   }
-
-  function renderSheetCart() {
-    if (!sheetCartItems || !sheetSubtotalEl) return;
-    sheetCartItems.innerHTML = "";
-    let subtotal = 0;
-    cart.forEach((item, index) => {
-      subtotal += item.price * item.qty;
-      const li = document.createElement("li");
-      li.className = "cart-item";
-      li.innerHTML = `
-        <div class="cart-item-main">
-          <span class="cart-item-name">${item.qty} × ${item.name}</span>
-          <span class="cart-item-meta">${formatMoney(item.price)} each</span>
-        </div>
-        <div class="cart-item-actions">
-          <button type="button" data-action="dec" data-index="${index}">-</button>
-          <button type="button" data-action="inc" data-index="${index}">+</button>
-        </div>
-      `;
-      sheetCartItems.appendChild(li);
-    });
-    sheetSubtotalEl.textContent = formatMoney(subtotal);
-  }
-
-  function setupCartDelegation(container) {
-    if (!container) return;
-    container.addEventListener("click", e => {
-      const btn = e.target.closest("button[data-action]");
-      if (!btn) return;
-      const action = btn.dataset.action;
-      const index = parseInt(btn.dataset.index, 10);
-      if (isNaN(index)) return;
-      if (action === "inc") updateQty(index, 1);
-      if (action === "dec") updateQty(index, -1);
-    });
-  }
-
-  setupCartDelegation(cartItemsEl);
-  setupCartDelegation(sheetCartItems);
 
   function openMenuModal() {
     if (!menuModal) return;
@@ -242,109 +196,282 @@ if (isMenuPage) {
     menuModal.classList.remove("is-open");
     menuModal.setAttribute("aria-hidden", "true");
     document.documentElement.style.overflow = "";
+    // reset checkout form visibility
     if (orderForm) orderForm.classList.add("is-hidden");
   }
 
   function setActiveCategory(sectionId) {
     const section = document.getElementById(sectionId);
     if (!section || !menuModalItems) return;
-    menuModalTitle.textContent = section.querySelector("h2")?.textContent?.trim() || "Menu";
+
+    const title = section.querySelector("h2")?.textContent?.trim() || "Menu";
+    if (menuModalTitle) menuModalTitle.textContent = title;
+
     menuModalItems.innerHTML = "";
-    section.querySelectorAll(".menu-item").forEach(li => {
+    const items = section.querySelectorAll(".menu-item");
+    items.forEach((li) => {
       const name = li.dataset.name || li.textContent.trim();
       const price = Number(li.dataset.price || "0");
       const display = li.textContent.replace(/\s+/g, " ").trim();
+
       const itemEl = document.createElement("li");
       itemEl.className = "menu-modal-item";
       itemEl.innerHTML = `
         <div class="menu-modal-item-top">
           <span class="menu-modal-item-name">${name}</span>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span class="menu-modal-item-price">R${price}</span>
-            <button class="btn primary add-btn" style="padding:6px 14px;font-size:0.8rem;">Add</button>
-          </div>
+          <span class="menu-modal-item-price">R${price}</span>
         </div>
         <div class="menu-modal-item-desc">${display}</div>
       `;
-      itemEl.querySelector(".add-btn").addEventListener("click", e => { e.stopPropagation(); addToCart(name, price); });
-      itemEl.addEventListener("click", () => addToCart(name, price));
+      itemEl.addEventListener("click", () => {
+        addToCart(name, price);
+      });
       menuModalItems.appendChild(itemEl);
     });
   }
 
-  categoryCards.forEach(btn => {
+  categoryCards.forEach((btn) => {
     btn.addEventListener("click", () => {
       const sectionId = btn.dataset.category;
-      if (sectionId) {
-        setActiveCategory(sectionId);
-        openMenuModal();
-      }
+      if (!sectionId) return;
+      setActiveCategory(sectionId);
+      openMenuModal();
     });
   });
 
-  menuModalOverlay?.addEventListener("click", closeMenuModal);
-  menuModalClose?.addEventListener("click", closeMenuModal);
-  continueBtn?.addEventListener("click", closeMenuModal);
-
-  function showCheckoutForm() {
-    if (!cart.length) {
-      alert("Add at least one item first!");
-      return;
-    }
-    if (!menuModal.classList.contains("is-open")) {
-      const first = categoryCards[0];
-      if (first) {
-        setActiveCategory(first.dataset.category);
-        openMenuModal();
+  if (menuModalOverlay) menuModalOverlay.addEventListener("click", closeMenuModal);
+  if (menuModalClose) menuModalClose.addEventListener("click", closeMenuModal);
+  if (continueBtn) continueBtn.addEventListener("click", closeMenuModal);
+  if (finishBtn) {
+    finishBtn.addEventListener("click", () => {
+      if (!cart.length) {
+        return;
       }
-    }
-    if (orderForm) {
-      orderForm.classList.remove("is-hidden");
-      setTimeout(() => orderForm.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
-    }
+      if (orderForm) orderForm.classList.remove("is-hidden");
+      if (orderForm) orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
-  finishBtn?.addEventListener("click", showCheckoutForm);
-  mainFinishBtn?.addEventListener("click", showCheckoutForm);
-  sheetFinish?.addEventListener("click", () => { cartSheet?.classList.remove("is-open"); showCheckoutForm(); });
+  if (mainFinishBtn) {
+    mainFinishBtn.addEventListener("click", () => {
+      if (!cart.length) {
+        // Also open the modal on the first category to guide them
+        const firstCard = categoryCards[0];
+        if (firstCard) {
+          const sectionId = firstCard.dataset.category;
+          if (sectionId) setActiveCategory(sectionId);
+          openMenuModal();
+        }
+        return;
+      }
 
-  floatingCartBtn?.addEventListener("click", () => {
-    if (!cart.length) return showCheckoutForm();
-    cartSheet?.classList.add("is-open");
-    renderSheetCart();
+      // If there is already food in the plate, open modal on any category and show checkout
+      const firstCard = categoryCards[0];
+      if (firstCard) {
+        const sectionId = firstCard.dataset.category;
+        if (sectionId) setActiveCategory(sectionId);
+      }
+      openMenuModal();
+      if (orderForm) orderForm.classList.remove("is-hidden");
+      if (orderForm) orderForm.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeMenuModal();
   });
 
-  sheetClose?.addEventListener("click", () => cartSheet?.classList.remove("is-open"));
-  sheetContinue?.addEventListener("click", () => cartSheet?.classList.remove("is-open"));
-
-  window.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      closeMenuModal();
-      cartSheet?.classList.remove("is-open");
-    }
-  });
-
-  // Jump from home
-  const params = new URLSearchParams(location.search);
+  // Jump handling for homepage cards (menu.html?jump=...)
+  const params = new URLSearchParams(window.location.search);
   const jump = params.get("jump");
   if (jump) {
-    const map = { pico: "section-pico", wings: "section-wings", fries: "section-fries", pata: "section-pata" };
-    const id = map[jump];
-    if (id) { setActiveCategory(id); openMenuModal(); }
+    const map = {
+      pico: "section-pico",
+      wings: "section-wings",
+      fries: "section-fries",
+      pata: "section-pata",
+    };
+    const sectionId = map[jump];
+    if (sectionId) {
+      setActiveCategory(sectionId);
+      openMenuModal();
+    }
   }
 
-  // Order submit (unchanged)
-  orderForm?.addEventListener("submit", async e => {
-    e.preventDefault();
-    // ... your existing EmailJS + jsPDF code ...
-  });
+  if (orderForm) {
+    orderForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!window.emailjs) {
+        if (feedbackEl) {
+          feedbackEl.textContent = "Email service not configured yet.";
+          feedbackEl.style.color = "#f97316";
+        }
+        return;
+      }
 
-  renderCart();
-  renderSheetCart();
-  updateCartBadge();
+      if (!cart.length) {
+        if (feedbackEl) {
+          feedbackEl.textContent = "Please add at least one item to your plate first.";
+          feedbackEl.style.color = "#f97316";
+        }
+        return;
+      }
+
+      const formData = new FormData(orderForm);
+      const fullName = formData.get("fullName") || "";
+      const email = formData.get("email") || "";
+      const whatsapp = formData.get("whatsapp") || "";
+      const notes = formData.get("notes") || "";
+
+      let subtotal = 0;
+      const lines = cart.map((item) => {
+        const lineTotal = item.price * item.qty;
+        subtotal += lineTotal;
+        return `${item.qty} × ${item.name} — ${formatMoney(lineTotal)}`;
+      });
+
+      const orderSummary = lines.join("\n");
+
+      // Match your EmailJS template fields:
+      // {{name}}, {{email}}, {{whatsapp}}, {{order_details}}
+      const templateParams = {
+        name: fullName,
+        email,
+        whatsapp,
+        order_details: `${orderSummary}\n\nTotal: ${formatMoney(subtotal)}\nNotes: ${notes || "None"}`,
+        // Helpful standard fields
+        reply_to: email,
+      };
+
+      if (feedbackEl) {
+        feedbackEl.textContent = "Sending your order…";
+        feedbackEl.style.color = "#9ca3af";
+      }
+
+      try {
+        await emailjs.send("service_5x43lc8", "template_gk7slp7", templateParams);
+        if (feedbackEl) {
+          feedbackEl.textContent =
+            "Order sent! Check your email for the slip and wait for WhatsApp confirmation.";
+          feedbackEl.style.color = "#4ade80";
+        }
+
+        // Generate PDF slip using jsPDF (only on menu page)
+        if (window.jspdf && window.jspdf.jsPDF) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          // Background
+          doc.setFillColor(3, 7, 18);
+          doc.rect(0, 0, 210, 297, "F");
+
+          // Header
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(20);
+          doc.text("FOOD BY MR BUFFALO", 14, 20);
+
+          doc.setFontSize(11);
+          doc.setTextColor(209, 213, 219);
+          doc.text("Order Slip / Invoice", 14, 28);
+
+          // Customer info
+          doc.setFontSize(10);
+          doc.text(`Name: ${fullName}`, 14, 40);
+          doc.text(`Email: ${email}`, 14, 46);
+          doc.text(`WhatsApp: ${whatsapp}`, 14, 52);
+
+          // Totals
+          doc.text(`Total: ${formatMoney(subtotal)}`, 14, 62);
+
+          // Order details
+          doc.setFontSize(11);
+          doc.text("Items:", 14, 76);
+          doc.setFontSize(9);
+          const linesWrapped = doc.splitTextToSize(orderSummary, 182);
+          doc.text(linesWrapped, 14, 84);
+
+          // Notes
+          if (notes) {
+            doc.setFontSize(10);
+            doc.text("Notes:", 14, 84 + linesWrapped.length * 5 + 6);
+            const notesWrapped = doc.splitTextToSize(notes.toString(), 182);
+            doc.setFontSize(9);
+            doc.text(notesWrapped, 14, 84 + linesWrapped.length * 5 + 12);
+          }
+
+          const filename = `FoodByMrBuffalo-${Date.now()}.pdf`;
+          doc.save(filename);
+        }
+      } catch (err) {
+        if (feedbackEl) {
+          feedbackEl.textContent = "Could not send order. Please try again in a moment.";
+          feedbackEl.style.color = "#f97316";
+        }
+        // eslint-disable-next-line no-console
+        console.error("EmailJS error", err);
+      }
+    });
+  }
 }
 
-// ... keep animations + year footer ...
+// SCROLL ANIMATIONS (sections + cards)
+const animatedNodes = document.querySelectorAll("[data-animate]");
+
+if ("IntersectionObserver" in window) {
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        const el = entry.target;
+        const type = el.dataset.animate;
+        const delay = parseFloat(el.dataset.delay || "0");
+
+        if (type === "fade-up") {
+          el.classList.add("will-animate");
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              el.classList.add("animate-in");
+            }, delay * 1000);
+          });
+        } else if (type === "card-rise") {
+          el.style.opacity = "0";
+          el.style.transform = "translateY(18px)";
+          setTimeout(() => {
+            el.style.transition =
+              "opacity 0.6s cubic-bezier(0.19,1,0.22,1), transform 0.6s cubic-bezier(0.19,1,0.22,1)";
+            el.style.opacity = "1";
+            el.style.transform = "translateY(0)";
+          }, delay * 1000);
+        } else if (type === "float-card") {
+          el.classList.add("float-card");
+          requestAnimationFrame(() => {
+            setTimeout(() => {
+              el.classList.add("float-card-in");
+            }, delay * 1000);
+          });
+        } else if (type === "slide-in") {
+          el.style.opacity = "0";
+          el.style.transform = "translateX(26px)";
+          setTimeout(() => {
+            el.style.transition =
+              "opacity 0.7s cubic-bezier(0.19,1,0.22,1), transform 0.7s cubic-bezier(0.19,1,0.22,1)";
+            el.style.opacity = "1";
+            el.style.transform = "translateX(0)";
+          }, delay * 1000);
+        } else if (type === "marquee") {
+          // handled via CSS keyframes, but we can ensure visibility
+          el.style.opacity = "1";
+        }
+
+        io.unobserve(el);
+      });
+    },
+    { threshold: 0.2 }
+  );
+
+  animatedNodes.forEach((node) => io.observe(node));
+}
 
 // YEAR IN FOOTER
 const yearSpan = document.getElementById("year");
