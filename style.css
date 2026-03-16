@@ -1533,75 +1533,7 @@ p {
   color: #cbd5e1;
 }
 @media (max-width: 768px) {
-
-  .nav-toggle {
-    display: flex;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 70px;
-    right: 0;
-    width: 100%;
-    background: rgba(2,6,23,0.98);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    display: none;
-    padding: 20px 0;
-  }
-
-  .nav-links ul {
-    flex-direction: column;
-    gap: 18px;
-    text-align: center;
-  }
-
-  .nav-links.active {
-    display: block;
-  }
-
-}
-@media (max-width: 768px) {
-
   .hero-right {
     display: none;
   }
-
-}
-/* MOBILE NAV FIX */
-
-@media (max-width: 900px){
-
-  .nav-toggle{
-    display:flex;
-  }
-
-  .btn-nav{
-    display:none;
-  }
-
-  .nav-links{
-    position:absolute;
-    top:100%;
-    left:0;
-    width:100%;
-    background:rgba(2,6,23,0.98);
-    backdrop-filter:blur(18px);
-
-    max-height:0;
-    overflow:hidden;
-    transition:max-height 0.35s ease;
-  }
-
-  .nav-links ul{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:18px;
-    padding:20px;
-  }
-
-  .nav-links.is-open{
-    max-height:400px;
-  }
-
 }
